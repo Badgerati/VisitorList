@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * those links have been visited to by their parent key.
  * 
  * @author Matthew Kelly (Badgerati).
- * @version 1.0.1.
+ * @version 1.0.2.
  * @since 24 May 2012.
  *
  * @param <K> - Class type for the keys.
@@ -16,13 +16,13 @@ import java.util.ArrayList;
 public class VisitorList<K, L>
 {
 	/**
-	 * Keys for this Visitor List.
+	 * Keys for this VisitorList.
 	 */
 	private ArrayList<K> Keys = null;
 	
 	
 	/**
-	 * The links this Visitor List's keys points to.
+	 * The links this VisitorList's keys points to.
 	 */
 	private ArrayList<ArrayList<L>> Links = null;
 	
@@ -43,7 +43,7 @@ public class VisitorList<K, L>
 	
 	
 	/**
-	 * Create new instance of a Visitor List.
+	 * Create new instance of a VisitorList.
 	 */
 	public VisitorList()
 	{
@@ -71,9 +71,38 @@ public class VisitorList<K, L>
 	 */
 	public boolean contains(K key, L link)
 	{
-		int index = Keys.indexOf(key);
-		return Links.get(index).contains(link);
+		int indexKey = Keys.indexOf(key);
+		
+		if (indexKey == -1)
+		{
+			return false;
+		}
+		else
+		{
+			return Links.get(indexKey).contains(link);
+		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Returns whether this VisitorList contains the given key.
+	 * 
+	 * @param key - Key to attempt to locate.
+	 * @return True if found, false otherwise.
+	 */
+	public boolean contains(K key)
+	{
+		return Keys.contains(key);
+	}
+	
+	
 	
 	
 	
@@ -209,8 +238,45 @@ public class VisitorList<K, L>
 	
 	
 	
+	
+	
 	/**
-	 * Returns whether the given link has been visited by the given key, if this Visitor List does
+	 * Removes the given key from this VisitorList, as well as its associated links. Returning
+	 * whether it was successful.
+	 * 
+	 * @param key - Key to remove.
+	 * @return True if successful, false otherwise.
+	 */
+	public boolean remove(K key)
+	{
+		int indexKey = Keys.indexOf(key);
+		
+		if (indexKey == -1)
+		{
+			return false;
+		}
+		else
+		{
+			Keys.remove(indexKey);
+			Links.remove(indexKey);
+			Visited.remove(indexKey);
+			return true;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Returns whether the given link has been visited by the given key, if this VisitorList does
 	 * not contain the given link/key then false is returned instead of null.
 	 * 
 	 * @param key - Key to find the link in.
@@ -239,6 +305,8 @@ public class VisitorList<K, L>
 			}
 		}
 	}
+	
+	
 	
 	
 	
@@ -288,8 +356,10 @@ public class VisitorList<K, L>
 	
 	
 	
+	
+	
 	/**
-	 * Returns the number of keys this Visitor List has.
+	 * Returns the number of keys this VisitorList has.
 	 * 
 	 * @return Total number of keys.
 	 */
@@ -320,6 +390,7 @@ public class VisitorList<K, L>
 		else
 			return Links.get(indexKey).size();
 	}
+	
 	
 	
 	
@@ -360,6 +431,8 @@ public class VisitorList<K, L>
 		
 		return values;
 	}
+	
+	
 	
 	
 	
@@ -417,6 +490,8 @@ public class VisitorList<K, L>
 	
 	
 	
+	
+	
 	/**
 	 * Returns the next non-visited link of the given key, returns null if there is not one.
 	 * 
@@ -459,7 +534,7 @@ public class VisitorList<K, L>
 	 * @param index - Index to find link at.
 	 * @return Link at given index, null otherwise.
 	 */
-	public L getLink(K key, int index)
+	public L getLink(K key, int indexLink)
 	{
 		int indexKey = Keys.indexOf(key);
 		
@@ -469,12 +544,110 @@ public class VisitorList<K, L>
 		}
 		else
 		{
-			if (index >= Links.get(indexKey).size() || index < 0)
+			if (indexLink >= Links.get(indexKey).size() || indexLink < 0)
 				return null;
 			
-			return Links.get(indexKey).get(index);
+			return Links.get(indexKey).get(indexLink);
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Returns the Links of the given key by the key's index.
+	 * 
+	 * @param indexKey - Index of the key to get links from.
+	 * @return List of links, null otherwise.
+	 */
+	public ArrayList<L> getLinks(int indexKey)
+	{		
+		if (indexKey <= -1 || indexKey >= Keys.size())
+		{
+			return null;
+		}
+		else
+		{
+			return new ArrayList<L>(Links.get(indexKey));
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Returns the Links of the given key.
+	 * 
+	 * @param key - Key to get links from.
+	 * @return List of links, null otherwise.
+	 */
+	public ArrayList<L> getLinks(K key)
+	{
+		int indexKey = Keys.indexOf(key);
+		return this.getLinks(indexKey);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Returns the key at the given index, null if out-of-bounds.
+	 * 
+	 * @param indexKey - Index of key to return.
+	 * @return Key at the given index, null otherwise.
+	 */
+	public K getKey(int indexKey)
+	{
+		if (indexKey <= -1 || indexKey >= Keys.size())
+		{
+			return null;
+		}
+		else
+		{
+			return Keys.get(indexKey);
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Returns this VisitorList's list of keys.
+	 * 
+	 * @return List of keys.
+	 */
+	public ArrayList<K> getKeys()
+	{
+		return new ArrayList<K>(Keys);
+	}
+	
+	
+	
 	
 	
 	
@@ -513,6 +686,7 @@ public class VisitorList<K, L>
 	
 	
 	
+	
 	/**
 	 * Returns the index of the given key, returning -1 if it does not exist.
 	 * 
@@ -522,62 +696,6 @@ public class VisitorList<K, L>
 	public int indexOf(K key)
 	{
 		return Keys.indexOf(key);
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * Returns the Links of the given key.
-	 * 
-	 * @param key - Key to get links from.
-	 * @return List of links, null otherwise.
-	 */
-	public ArrayList<L> getLinks(K key)
-	{
-		int indexKey = Keys.indexOf(key);
-		
-		if (indexKey == -1)
-		{
-			return null;
-		}
-		else
-		{
-			return new ArrayList<L>(Links.get(indexKey));
-		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * Returns the Links of the given key by the key's index.
-	 * 
-	 * @param indexKey - Index of the key to get links from.
-	 * @return List of links, null otherwise.
-	 */
-	public ArrayList<L> getLinks(int indexKey)
-	{		
-		if (indexKey <= -1 || indexKey > Keys.size())
-		{
-			return null;
-		}
-		else
-		{
-			return new ArrayList<L>(Links.get(indexKey));
-		}
 	}
 	
 	
