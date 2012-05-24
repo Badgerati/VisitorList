@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * those links have been visited to by their parent key.
  * 
  * @author Matthew Kelly (Badgerati).
- * @version 1.0.0.
+ * @version 1.0.1.
  * @since 24 May 2012.
  *
  * @param <K> - Class type for the keys.
@@ -328,6 +328,47 @@ public class VisitorList<K, L>
 	
 	
 	
+	
+	/**
+	 * Returns the number of links for all the keys this Visitor List contains. Will either
+	 * return a single value for total summation, or individual values for each key depending
+	 * on the value given to 'stacked'.
+	 * 
+	 * @param stacked - If true, returns total summation, else individual values.
+	 * @return Integer array containing total number of links for all keys.
+	 */
+	public int[] sizeAll(boolean stacked)
+	{
+		int[] values = null;
+		
+		if (stacked)
+			values = new int[1];
+		else
+			values = new int[Keys.size()];
+		
+		for (int i = 0; i < Keys.size(); i++)
+		{
+			if (stacked)
+			{
+				values[0] += Links.get(i).size();
+			}
+			else
+			{
+				values[i] = Links.get(i).size();
+			}
+		}
+		
+		return values;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	/**
 	 * Clear the keys and links of this Visitor List. Returning whether is was successful.
 	 * 
@@ -503,6 +544,33 @@ public class VisitorList<K, L>
 		int indexKey = Keys.indexOf(key);
 		
 		if (indexKey == -1)
+		{
+			return null;
+		}
+		else
+		{
+			return new ArrayList<L>(Links.get(indexKey));
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/**
+	 * Returns the Links of the given key by the key's index.
+	 * 
+	 * @param indexKey - Index of the key to get links from.
+	 * @return List of links, null otherwise.
+	 */
+	public ArrayList<L> getLinks(int indexKey)
+	{		
+		if (indexKey <= -1 || indexKey > Keys.size())
 		{
 			return null;
 		}
